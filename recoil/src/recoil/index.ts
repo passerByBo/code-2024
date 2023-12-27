@@ -52,7 +52,22 @@ class Atom<T> extends Stateful<T> {
 class Selector<T> extends Stateful<T>{
     constructor(private readonly generate: SelectorGenerator<T>){
         super(undefined as any)
-        this.value = generate(this.snapshot())
+        this.value = this.generate({get: (dep: Atom<any>) => this.addSub(dep)})
+    }
+        
+    private registeredDeps = new Set<Atom<any>>()
+
+    private addSub<T>(dep: Atom<T>){
+        if(!this.registeredDeps.has(dep)){
+            dep.subscribe(() => this.updateSelector())
+            this.registeredDeps.add(dep)
+        } 
+
+        return dep.snapshot()
+    }
+
+    private updateSelector(){
+        this.update(this.generate({get: (dep: Atom<any>) => this.addSub(dep)}))
     }
 
 }
