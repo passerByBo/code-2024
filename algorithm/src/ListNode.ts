@@ -9,4 +9,3 @@ class ListNode {
 
 export default ListNode;
 
-type MinMap = {}
