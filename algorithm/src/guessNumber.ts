@@ -6,6 +6,7 @@
  *               otherwise return 0
  * var guess = function(num) {}
  */
+ var guess = function(num):number {}
 // 二分是分治的粗略
 
 // 分治 分 解 合
