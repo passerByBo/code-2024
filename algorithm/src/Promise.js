@@ -86,24 +86,44 @@ class BPromise {
   }
 
   then(onFulfilled, onRejected) {
-    onFulfilled = isFunction(onFulfilled) ? onFulfilled : value => value
-    onRejected = isFunction(onRejected) ? onRejected : reason => {throw reason}
-
+    onFulfilled = isFunction(onFulfilled) ? onFulfilled : (value) => value;
+    onRejected = isFunction(onRejected)
+      ? onRejected
+      : (reason) => {
+          throw reason;
+        };
 
     return new BPromise((resolve, reject) => {
-        const handleCallback = () => {}
-
-
-        if(this.state === FULFILLED){
-            setTimeout(() => handleCallback(onFulfilled, resolve, reject, this.state, this.value), 0)
-        } else if(this.state === REJECTED){
-            setTimeout(() => handleCallback(onRejected, resolve, reject, this.state, this.reason), 0);
-        } else {
-            this.onFulfilledCallbacks.push(() => handleCallback(onFulfilled, resolve, reject, this.state, this.value))
-            this.onRejectedCallbacks.push(() => handleCallback(onFulfilled, resolve, reject, this.state, this.reason))
+      const handleCallback = (callback, resolve, reject, state, value) => {
+        try {
+          const result = callback(value);
+          if (result instanceof MyPromise) {
+            result.then(resolve, reject);
+          } else {
+            resolve(result);
+          }
+        } catch (error) {
+          reject(error);
         }
-    })
+      };
 
+      if (this.state === FULFILLED) {
+        setTimeout(() =>
+          handleCallback(onFulfilled, resolve, reject, this.state, this.value)
+        );
+      } else if (this.state === REJECTED) {
+        setTimeout(() =>
+          handleCallback(onRejected, resolve, reject, this.state, this.reason)
+        );
+      } else {
+        this.onFulfilledCallbacks.push(() =>
+          handleCallback(onFulfilled, resolve, reject, this.state, this.value)
+        );
+        this.onRejectedCallbacks.push(() =>
+          handleCallback(onFulfilled, resolve, reject, this.state, this.reason)
+        );
+      }
+    });
   }
 
   catch(onRejected) {
@@ -111,7 +131,7 @@ class BPromise {
   }
 
   static resolve(value) {
-    return new BPromise(resolve => resolve(value));
+    return new BPromise((resolve) => resolve(value));
   }
 
   static reject(reason) {
@@ -120,30 +140,33 @@ class BPromise {
 
   static all(promises) {
     return new MyPromise((resolve, reject) => {
-        const results = [];
-        let completedCount = 0;
-  
-        const handleResolve = (index, value) => {
-          results[index] = value;
-          completedCount++;
-  
-          if (completedCount === promises.length) {
-            resolve(results);
-          }
-        };
-  
-        for (let i = 0; i < promises.length; i++) {
-          BPromise.resolve(promises[i]).then(value => handleResolve(i, value), reject);
+      const results = [];
+      let completedCount = 0;
+
+      const handleResolve = (index, value) => {
+        results[index] = value;
+        completedCount++;
+
+        if (completedCount === promises.length) {
+          resolve(results);
         }
-      });
+      };
+
+      for (let i = 0; i < promises.length; i++) {
+        BPromise.resolve(promises[i]).then(
+          (value) => handleResolve(i, value),
+          reject
+        );
+      }
+    });
   }
 
   static race(promises) {
     return new BPromise((resolve, reject) => {
-        for (let i = 0; i < promises.length; i++) {
-          BPromise.resolve(promises[i]).then(resolve, reject);
-        }
-      });
+      for (let i = 0; i < promises.length; i++) {
+        BPromise.resolve(promises[i]).then(resolve, reject);
+      }
+    });
   }
 }
 
