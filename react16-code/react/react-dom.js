@@ -29,27 +29,7 @@ function workLoop(deadline) {
     shouldYield = deadline.timeRemaining() < 1;
   }
 
-  if(!nextNuitOfWork && wipRoot){
-    commitRoot()
-   
-  }
-
-  // 下一次空闲时间
-  requestIdleCallback(workLoop);
-}
-
-// 浏览器空闲时候执行调度任务  react中使用的是requestAnimationFrame  计算两帧之间的剩余时间 来判断空闲时间
-requestIdleCallback(workLoop);
-
-
-
-function commitWork(fiber){
-    if(!fiber){
-        return
-    }
-
-    //找到最近有dom的祖先节点
-    let domParentFiber = fiber.parent
+  // dom创建完成  统一将d
     while(!domParentFiber.dom){
         domParentFiber = domParentFiber.parent
     }
@@ -57,6 +37,7 @@ function commitWork(fiber){
     // 将fiber的dom节点追加到父节点
     domParentFiber.dom.appendChild(fiber.dom)
 
+    // 深度优先遍历 递归的方式
     commitWork(fiber.child)
     commitWork(fiber.sibling)
 }
