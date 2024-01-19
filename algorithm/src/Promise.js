@@ -97,7 +97,7 @@ class BPromise {
       const handleCallback = (callback, resolve, reject, state, value) => {
         try {
           const result = callback(value);
-          if (result instanceof MyPromise) {
+          if (result instanceof BPromise) {
             result.then(resolve, reject);
           } else {
             resolve(result);
