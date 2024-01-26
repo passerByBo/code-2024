@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>广度优先遍历</title>
+</head>
+<body>
+    <script>
+          class TreeNode {
+            constructor(val, left = null, right = null){
+                this.val = val;
+                this.left = left;
+                this.right = right
+            }
+        }
+
+        const root = new TreeNode(1)
+        root.left = new TreeNode(2)
+        root.right = new TreeNode(3)
+        root.left.left = new TreeNode(4)
+        root.left.right = new TreeNode(5)
+        root.right.left = new TreeNode(6)
+        root.right.right = new TreeNode(7)
+
+
+        function bfs(node){
+            if(!node) return;
+            const queue = [node]
+            while(queue.length){
+                const curr = queue.pop()
+                console.log(curr.val)
+                curr.left && queue.unshift(curr.left)
+                curr.right && queue.unshift(curr.right)
+            }
+        }
+        bfs(root)
+    </script>
+</body>
+</html>

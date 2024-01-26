@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>深度优先遍历</title>
+	</head>
+	<body>
+		<script>
+			class TreeNode {
+				constructor(val, left = null, right = null) {
+					this.val = val;
+					this.left = left;
+					this.right = right;
+				}
+			}
+
+			const root = new TreeNode(1);
+			root.left = new TreeNode(2);
+			root.right = new TreeNode(3);
+			root.left.left = new TreeNode(4);
+			root.left.right = new TreeNode(5);
+			root.right.left = new TreeNode(6);
+			root.right.right = new TreeNode(7);
+
+			// 爆栈的风险
+
+			// 使用栈完成先序遍历
+			function preorderTraversal(node) {
+				if (!root) return [];
+				const res = [];
+				const stack = [node];
+
+				while (stack.length) {
+					const curr = stack.pop();
+					curr.right && stack.push(curr.right);
+					res.push(curr.val);
+					curr.left && stack.push(curr.left);
+				}
+
+				return res;
+			}
+
+			// 中序遍历
+
+			function inorderTraversal(node) {
+				if (!node) return [];
+				const result = [];
+				const stack = [];
+
+				let current = node;
+				while (current || stack.length > 0) {
+					// 将左子树的所有节点入栈
+					while (current) {
+						stack.push(current);
+						current = current.left;
+					}
+
+					// 弹出栈顶的节点
+					current = stack.pop();
+					result.push(current.val);
+
+					// 将右子树设为当前节点
+					current = current.right;
+				}
+			}
+
+			console.log(preorderTraversal(root));
+		</script>
+	</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        class TreeNode {
+            constructor(val, left = null, right = null){
+                this.val = val;
+                this.left = left;
+                this.right = right
+            }
+        }
+
+        const root = new TreeNode(1)
+        root.left = new TreeNode(2)
+        root.right = new TreeNode(3)
+        root.left.left = new TreeNode(4)
+        root.left.right = new TreeNode(5)
+        root.right.left = new TreeNode(6)
+        root.right.right = new TreeNode(7)
+
+        // 深度优先遍历 前序
+        function dfs(node){
+
+            if(!node) return
+
+            // 前序
+            console.log(node.val)
+            dfs(node.left)
+            // 中序
+            // console.log(node.val)
+            dfs(node.right)
+            // 后序
+            // console.log(node.val)
+
+        }
+
+        dfs(root)
+    </script>
+</body>
+</html>

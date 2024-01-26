@@ -1,0 +1,31 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+        "target": "ESNext",
+        "useDefineForClassFields": true,
+        "module": "ESNext",
+        "lib": [
+            "ESNext",
+            "DOM"
+        ],
+        "strictNullChecks": true,
+        "moduleResolution": "Node",
+        "strict": true,
+        "sourceMap": true,
+        "resolveJsonModule": true,
+        // 全局重复
+        "isolatedModules": true,
+        "esModuleInterop": true,
+        "noEmit": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noImplicitReturns": false,
+        "noImplicitThis": false,
+        "skipLibCheck": true,
+        "experimentalDecorators": true,
+        "baseUrl": "./packages",
+        "paths": {
+            "hostConfig": ["./react-reconciler/src/hostConfig.ts"]
+        },
+    }
+}

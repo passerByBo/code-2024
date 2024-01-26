@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+
+	<body>
+		<script>
+			/**
+			 * @param {number[]} nums
+			 * @param {number} val
+			 * @return {number}
+			 */
+			// function removeElement(nums, val) {
+			//     let left = 0,
+			//         right = nums.length - 1;
+			//     while (left <= right) {
+			//         if (nums[left] === val) {
+			//             nums[left] = nums[right]
+			//             nums[right] = 0
+			//             right--
+			//         } else {
+			//             left++
+			//         }
+			//     }
+			//     nums.length = right + 1
+			//     return nums.length
+			// };
+
+			// removeElement([3,2,2,3], 3)
+
+			/**
+			 * @param {number[]} nums
+			 * @return {number}
+			 */
+			// var removeDuplicates = function (nums) {
+			// 	let slow = 0,
+			// 		fast = 1;
+			// 	while (fast !== nums.length) {
+			// 		if (nums[slow] !== nums[fast]) {
+			// 			slow++;
+			// 			nums[slow] = nums[fast];
+			// 			fast++;
+			// 		} else {
+			// 			fast++;
+			// 		}
+			// 	}
+
+			// 	nums.length = slow + 1;
+			// 	console.log(nums);
+			// };
+
+			// removeDuplicates([0, 0, 1, 1, 1, 2, 2, 3, 3, 4]);
+
+			// 摩尔投票算法 计算众数大于百分之五十的
+
+			/**
+			 * @param {number[]} nums
+			 * @return {number}
+			 */
+			// var majorityElement = function (nums) {
+			// 	let count = 0,
+			// 		res;
+
+			// 	for (let i = 0; i < nums.length; i++) {
+			// 		if (res === nums[0]) {
+			// 			count++;
+			// 			continue;
+			// 		}
+			// 		if (count === 0) {
+			// 			res = nums[i];
+			// 			count++;
+			// 		} else {
+			// 			count--;
+			// 		}
+			// 	}
+
+			// 	return res;
+			// };
+
+			/**
+			 * @param {number[]} nums
+			 * @param {number} k
+			 * @return {void} Do not return anything, modify nums in-place instead.
+			 */
+			// var rotate = function (nums, k) {
+			// 	// 方法1
+			// 	// let i = 0
+			// 	// while (i < k) {
+			// 	//     const last = nums.pop()
+			// 	//     nums.unshift(last)
+			// 	//     i++;
+			// 	// }
+			//     // 方法2
+			// 	const len = nums.length
+			// 	k = k % len
+
+			// 	let cur = 0;
+			// 	let next = (cur + k) % len;
+			// 	let count = 0
+			// 	let cache =  nums[cur];
+			// 	while(count < len){
+			// 		cache = nums[next]
+			// 		nums[next] = nums[cur];
+			// 		cur = next
+			// 		next = (cur + k) % len;
+			// 		count++
+			// 	}
+			// 	console.log('rotate',nums)
+			// };
+
+			// rotate([1,2,3,4,5,6,7], 3)
+			// [1, 2, 3, 4, 5, 6, 7]
+			// [5, 6, 7, 1, 2, 3, 4]
+
+			/**
+			 * @param {number[]} prices
+			 * @return {number}
+			 */
+			// var maxProfit = function (prices) {
+			// 	let min = Infinity;
+			// 	let max = -1;
+			// 	let cache = 0;
+			// 	for (let i = 0; i < prices.length; i++) {
+			// 		if (prices[i] <= min) {
+			// 			if (max !== -1) {
+			// 				cache = cache < max - min ? max- min : cache;
+			// 				max = -1;
+			// 			}
+			// 			min = prices[i];
+			// 		} else if (prices[i] >= max) {
+			// 			max = prices[i];
+			// 		}
+			// 	}
+			// 	return max - min > cache ? max - min : cache;
+			// };
+
+			// console.log(maxProfit([7, 1, 5, 3, 6, 4]));
+			// console.log(maxProfit([1, 2]));
+			// console.log(maxProfit([2, 4, 1]));
+			// console.log(maxProfit([3, 2, 6, 5, 0, 3]));
+
+			// 反转链表
+			/**
+			 * Definition for singly-linked list.
+			 * function ListNode(val, next) {
+			 *     this.val = (val===undefined ? 0 : val)
+			 *     this.next = (next===undefined ? null : next)
+			 * }
+			 */
+			/**
+			 * @param {ListNode} head
+			 * @return {ListNode}
+			 */
+
+			// function ListNode(val, next) {
+			// 	this.val = val === undefined ? 0 : val;
+			// 	this.next = next === undefined ? null : next;
+			// }
+			// const n5 = new ListNode(5, null);
+			// const n4 = new ListNode(4, n5);
+			// const n3 = new ListNode(3, n4);
+			// const n2 = new ListNode(2, n3);
+			// const n1 = new ListNode(1, n2);
+			// var reverseList = function (head) {
+			// 	if (!head) return head;
+			// 	// 1->2->3->4->5
+			// 	let cur = head.next;
+			// 	head.next = null;
+			// 	let pre = head;
+			// 	while (cur) {
+			// 		const next = cur.next;
+			// 		cur.next = pre;
+			// 		pre = cur;
+			// 		cur = next;
+			// 	}
+
+			// 	return pre;
+			// };
+
+			// reverseList(n1);
+			// console.log(n5);
+
+			/**
+			 * @param {ListNode} node
+			 * @return {void} Do not return anything, modify node in-place instead.
+			 */
+			// var deleteNode = function (node) {
+			// 	node.val = node.next.val;
+			//     node.next = node.next.next;
+			// };
+
+			// reverseList(n1);
+			/**
+			 * Definition for singly-linked list.
+			 * function ListNode(val, next) {
+			 *     this.val = (val===undefined ? 0 : val)
+			 *     this.next = (next===undefined ? null : next)
+			 * }
+			 */
+			/**
+			 * @param {ListNode} l1
+			 * @param {ListNode} l2
+			 * @return {ListNode}
+			 */
+
+			// 输入：l1 = [9,9,9,9,9,9,9], l2 = [9,9,9,9]
+			// 输出：[8,9,9,9,0,0,0,1]
+
+			// 输入：l1 = [2,4,3], l2 = [5,6,4]
+			// 输出：[7,0,8]
+			// 解释：342 + 465 = 807.
+			// var addTwoNumbers = function (l1, l2) {
+			// 	let carry = 0;
+			// 	let res = new NodeList()
+			// 	let cur = res
+			// 	while (l1 || l2 || carry) {
+			// 		const sum = (l1 ? l1.val : 0) + (l2 ? l2.val : 0) + carry
+			// 		carry = sum >= 10 ? 1 : 0;
+			// 		cur.next = new NodeList(sum % 10)
+			// 		cur = cur.next
+			// 		l1 = l1 ? l1.next : l1
+			// 		l2 = l2 ? l2.next : l2
+			// 	}
+
+			// 	return res.next;
+			// };
+
+			// 借助于set
+			/**
+			 * @param {number[]} nums1
+			 * @param {number[]} nums2
+			 * @return {number[]}
+			 */
+			var intersection = function (nums1, nums2) {
+				const set = new Set(nums1)
+				const res = []
+				for(let item of nums2){
+					if(set.has(item)){
+						set.delete(item)
+						res.push(item)
+					}
+				}
+
+				return res
+			};
+			// 借助于map
+			/**
+			 * @param {number[]} nums
+			 * @param {number} target
+			 * @return {number[]}
+			 */
+			var twoSum = function (nums, target) {
+				const map = new Map();
+				for (let i = 0; i < nums.length; i++) {
+					if (map.has(target - nums[i])) {
+						return [map.get(target - nums[i]), i];
+					} else {
+						map.set(nums[i], i);
+					}
+				}
+			};
+
+			console.log(twoSum([2, 7, 11, 15], 9));
+		</script>
+	</body>
+</html>

@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<body>
+		<script>
+			            class TreeNode {
+							constructor(val, left = null, right = null) {
+								this.val = val;
+								this.left = left;
+								this.right = right;
+							}
+						}
+
+						const root = new TreeNode(1);
+						root.left = new TreeNode(2);
+						root.right = new TreeNode(3);
+						root.left.left = new TreeNode(4);
+						root.left.right = new TreeNode(5);
+						root.right.left = new TreeNode(6);
+						root.right.right = new TreeNode(7);
+						/**
+						 * Definition for a binary tree node.
+						 * function TreeNode(val, left, right) {
+						 *     this.val = (val===undefined ? 0 : val)
+						 *     this.left = (left===undefined ? null : left)
+						 *     this.right = (right===undefined ? null : right)
+						 * }
+						 */
+						/**
+						 * @param {TreeNode} root
+						 * @return {number[][]}
+						 */
+						// var levelOrder = function (root) {
+			            //     if(!root) return []
+			            //     const res = []
+			            //     const queue = [[root, 0]]
+
+			            //     while(queue.length){
+
+			            //         const [node, d] = queue.shift()
+			            //         if(res[d]){
+			            //             res[d].push(node.val)
+			            //         } else {
+                        //             res[d] = [node.val]
+			            //         }
+
+			            //         node.left && queue.push([node.left, d + 1])
+			            //         node.right && queue.push([node.right,d + 1])
+			            //     }
+
+                        //     return res
+			            // };
+
+                        var levelOrder = function (root) {
+                            if(!root) return []
+
+                            const res = []
+                            const queue = [root]
+                            while(queue.length){
+                                let len = queue.length;
+                                res.push([])
+                                while(len--){
+                                    const node = queue.shift()
+                                    res[res.length - 1].push(node.val)
+                                    node.left &&  queue.push(node.left)
+                                    node.right &&  queue.push(node.right)
+
+                                }
+                            }
+
+                            return res
+                        }
+                        
+
+                        console.log(levelOrder(root))
+		</script>
+	</body>
+</html>

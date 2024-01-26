@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<body>
+		<script>
+			// 给你二叉树的根节点 root 和一个表示目标和的整数 targetSum 。判断该树中是否存在 根节点到叶子节点 的路径，
+			// 这条路径上所有节点值相加等于目标和 targetSum 。如果存在，返回 true ；否则，返回 false 。
+			// 叶子节点 是指没有子节点的节点。
+
+			class TreeNode {
+				constructor(val, left = null, right = null) {
+					this.val = val;
+					this.left = left;
+					this.right = right;
+				}
+			}
+
+			const root = new TreeNode(1);
+			root.left = new TreeNode(2);
+			root.right = new TreeNode(3);
+			root.left.left = new TreeNode(4);
+			root.left.right = new TreeNode(5);
+			root.right.left = new TreeNode(6);
+			root.right.right = new TreeNode(7);
+
+			/**
+			 * Definition for a binary tree node.
+			 * function TreeNode(val, left, right) {
+			 *     this.val = (val===undefined ? 0 : val)
+			 *     this.left = (left===undefined ? null : left)
+			 *     this.right = (right===undefined ? null : right)
+			 * }
+			 */
+			/**
+			 * @param {TreeNode} root
+			 * @param {number} targetSum
+			 * @return {boolean}
+			 */
+			var hasPathSum = function (root, targetSum) {
+                if(!root) return false;
+
+                const stack = [[root, root.val]]
+
+                while(stack.length){
+                    const [node, p] = stack.pop();
+                    if(!node.left && !node.right && targetSum === p) return true
+                    node.left && stack.push([node.left, p + node.left.val])
+                    node.right && stack.push([node.right, p + node.right.val])
+                }
+
+                return false
+            };
+
+            console.log(hasPathSum(root, 7 ))
+		</script>
+	</body>
+</html>

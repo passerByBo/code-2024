@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>二叉树的最大深度</title>
+	</head>
+	<body>
+		<script>
+			class TreeNode {
+				constructor(val, left = null, right = null) {
+					this.val = val;
+					this.left = left;
+					this.right = right;
+				}
+			}
+
+			const root = new TreeNode(1);
+			root.left = new TreeNode(2);
+			root.right = new TreeNode(3);
+			root.left.left = new TreeNode(4);
+			root.left.right = new TreeNode(5);
+			root.right.left = new TreeNode(6);
+			root.right.right = new TreeNode(7);
+			/**
+			 * Definition for a binary tree node.
+			 * function TreeNode(val, left, right) {
+			 *     this.val = (val===undefined ? 0 : val)
+			 *     this.left = (left===undefined ? null : left)
+			 *     this.right = (right===undefined ? null : right)
+			 * }
+			 */
+			/**
+			 * @param {TreeNode} root
+			 * @return {number}
+			 */
+			var maxDepth = function (root) {
+				if (!root) return 0;
+				let maxDepth = 0;
+				const stack = [{node: root, depth: 1}]
+				while(stack.length){
+					const {node, depth: currentDepth} = stack.pop()
+					// node.left && stack.push({node: node.left, depth: currentDepth+1})
+					// node.right && stack.push({node: node.right, depth: currentDepth+1})
+					if(node.left){
+						stack.push({node: node.left, depth: currentDepth+1})
+						maxDepth = Math.max(maxDepth,currentDepth + 1)
+					}
+					if(node.right){
+						stack.push({node: node.right, depth: currentDepth+1})
+						maxDepth = Math.max(maxDepth,currentDepth + 1)
+					}
+				}
+
+				return maxDepth
+			};
+
+			console.log(maxDepth(root));
+		</script>
+	</body>
+</html>

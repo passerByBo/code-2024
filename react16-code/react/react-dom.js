@@ -1,5 +1,5 @@
 // 下一个工作单元
-let nextNuitOfWork = null;
+let nextUnitOfWork = null;
 
 // fiberRoot根节点
 let wipRoot = null;
@@ -29,7 +29,7 @@ export function render(element, container) {
 
   // 初始化设置为空的数组
   deletions = [];
-  nextNuitOfWork = wipRoot;
+  nextUnitOfWork = wipRoot;
   requestIdleCallback(workLoop);
 }
 
@@ -40,22 +40,21 @@ export function render(element, container) {
 function workLoop(deadline) {
   // 停止标识
   let shouldYield = false;
-  while (nextNuitOfWork && deadline) {
+  while (nextUnitOfWork && deadline) {
     // 执行工作单元
-    nextNuitOfWork = performUnitOfWork(nextNuitOfWork);
+    nextUnitOfWork = performUnitOfWork(nextUnitOfWork);
     // 判断是否需要停止
     shouldYield = deadline.timeRemaining() < 1;
   }
 
   // 将所有的dom描述都转换为fiber node
-  if (!nextNuitOfWork && wipRoot) {
+  if (!nextUnitOfWork && wipRoot) {
     // 提交阶段  创建dom  将dom绑定到父节点上
     commitRoot();
   }
 
   requestIdleCallback(workLoop);
 }
-
 
 /**
  * 更新dom的属性
@@ -103,16 +102,16 @@ function updateDom(dom, prevProps, nextProps) {
 
 /**
  * 删除dom
- * @param {*} fiber 
- * @param {*} domParent 
+ * @param {*} fiber
+ * @param {*} domParent
  */
 const commitDeletion = (fiber, domParent) => {
-  if(fiber.dom){
-    domParent.removeChild(fiber.dom)
+  if (fiber.dom) {
+    domParent.removeChild(fiber.dom);
   } else {
-    commitDeletion(fiber.child, domParent)
+    commitDeletion(fiber.child, domParent);
   }
-}
+};
 
 function commitWork(fiber) {
   // 结束条件
@@ -133,7 +132,7 @@ function commitWork(fiber) {
     domParent.appendChild(fiber.dom);
   } else if (fiber.effectTag === "DELETION") {
     // domParent.removeChild(fiber.dom);
-    commitDeletion(fiber, domParent)
+    commitDeletion(fiber, domParent);
   } else if (fiber.effectTag === "UPDATE" && fiber.dom != null) {
     updateDom(fiber.dom, fiber.alternate.props, fiber.props);
   }
@@ -235,34 +234,84 @@ function reconcileChildren(wipFiber, elements) {
   }
 }
 
-/**
- * Function Component 组件
- * @param {*} fiber 
- */
-const updateFunctionComponent = (fiber) => {
-  const children = [fiber.type(fiber.props)]
-  reconcileChildren(fiber, children)
+let hookIndex = null;
+let wipFiber = null;
+export function useState(initial) {
+  // 新创建的fiberNode wipFiber， 初始化重新执行一次useState
+  debugger
+  // 检查是否有旧的hooks  setState的时候后会有oldHook 保存
+  const oldHook =
+    wipFiber.alternate &&
+    wipFiber.alternate.hooks &&
+    wipFiber.alternate.hooks[hookIndex];
+
+  const hook = {
+    state: oldHook ? oldHook.state : initial,
+    queue: [],
+  };
+
+  const actions = oldHook ? oldHook.queue : [];
+
+  // 更新的时候有值 调用setState后才会设入函数
+  actions.forEach((action) => {
+    hook.state = typeof action === "function" ? action(hook.state) : action;
+  });
+
+  const setState = (action) => {
+    // action新的值
+    hook.queue.push(action);
+
+    wipRoot = {
+      dom: currentRoot,
+      props: currentRoot.props,
+      alternate: currentRoot,
+    };
+
+    nextUnitOfWork = wipRoot;
+    deletions = [];
+  };
+
+  // 保存初始化的自定义组件的hooks队列中
+  wipFiber.hooks.push(hook);
+  // 指针移动下一个
+  hookIndex++;
+  return [hook.state, setState];
 }
 
 /**
+ * Function Component 组件
+ * @param {*} fiber
+ */
+const updateFunctionComponent = (fiber) => {
+  wipFiber = fiber;
+  hookIndex = 0;
+  // hooks绑定在当前函数组件fiber上  每次刷新都会重新执行useState
+  wipFiber.hooks = [];
+
+  const children = [fiber.type(fiber.props)];
+  console.log(fiber,children)
+  reconcileChildren(fiber, children);
+};
+
+/**
  * 原生dom组件
- * @param {*} fiber 
+ * @param {*} fiber
  */
 const updateHostComponent = (fiber) => {
   if (!fiber.dom) {
     fiber.dom = createDom(fiber);
   }
   const elements = fiber.props.children;
-  reconcileChildren(fiber, elements)
-}
+  reconcileChildren(fiber, elements);
+};
 
 // dom描述对象转换为fiber对象
 function performUnitOfWork(fiber) {
   const isFunctionComponent = fiber.type instanceof Function;
-  if(isFunctionComponent){
-    updateFunctionComponent(fiber)
+  if (isFunctionComponent) {
+    updateFunctionComponent(fiber);
   } else {
-    updateHostComponent(fiber)
+    updateHostComponent(fiber);
   }
 
   // 深度优先遍历  下一层遍历节点优先遍历子节点
