@@ -167,8 +167,3 @@ function getArea(shape: Shape) {
 			shape; // never 类型
 	}
 }
-
-
-type ABC = {
-	A: string
-}

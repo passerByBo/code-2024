@@ -1,0 +1,74 @@
+lockfileVersion: '6.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .:
+    dependencies:
+      react-dom:
+        specifier: workspace:^
+        version: link:../../../react18-code/packages/react-dom
+      shared:
+        specifier: workspace:*
+        version: link:../shared
+
+  ../..: {}
+
+  ../../../algorithm: {}
+
+  ../../../common-react: {}
+
+  ../../../fp: {}
+
+  ../../../fp-ts: {}
+
+  ../../../graphql: {}
+
+  ../../../interface: {}
+
+  ../../../interface/apps/mobile: {}
+
+  ../../../interface/apps/mobile/src: {}
+
+  ../../../interface/apps/web: {}
+
+  ../../../interface/config/eslint-config-custom: {}
+
+  ../../../interface/config/jest-presets: {}
+
+  ../../../interface/config/tsconfig: {}
+
+  ../../../interface/packages/ui: {}
+
+  ../../../interface/packages/utilities: {}
+
+  ../../../interface/packages/wallet: {}
+
+  ../../../react16-code: {}
+
+  ../../../react18-code: {}
+
+  ../../../react18-code/packages/react: {}
+
+  ../../../react18-code/packages/react-dom: {}
+
+  ../../../react18-code/packages/react-reconciler: {}
+
+  ../../../react18-code/packages/shared: {}
+
+  ../../../recoil: {}
+
+  ../../../redux: {}
+
+  ../../../vue-router-ts: {}
+
+  ../../../webpack: {}
+
+  ../react: {}
+
+  ../react-demo: {}
+
+  ../shared: {}

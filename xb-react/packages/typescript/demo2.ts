@@ -1,1 +1,0 @@
-type aaa = {a: number}

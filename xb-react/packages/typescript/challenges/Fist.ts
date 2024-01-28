@@ -10,4 +10,3 @@ type head2 = Fist<arr2>
 
 
 export {}
-

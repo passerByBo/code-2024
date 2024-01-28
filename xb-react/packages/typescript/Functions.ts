@@ -216,3 +216,5 @@ function ffd2(): void {
 const ffd3 = function (): void {
 	return true;
 };
+
+export {}

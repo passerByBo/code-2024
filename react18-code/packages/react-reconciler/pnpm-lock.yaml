@@ -1,0 +1,77 @@
+lockfileVersion: '6.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .:
+    dependencies:
+      react:
+        specifier: workspace:^
+        version: link:../../../xb-react/packages/react
+      react-dom:
+        specifier: workspace:^
+        version: link:../react-dom
+      shared:
+        specifier: workspace:^
+        version: link:../../../xb-react/packages/shared
+
+  ../..: {}
+
+  ../../../algorithm: {}
+
+  ../../../common-react: {}
+
+  ../../../fp: {}
+
+  ../../../fp-ts: {}
+
+  ../../../graphql: {}
+
+  ../../../interface: {}
+
+  ../../../interface/apps/mobile: {}
+
+  ../../../interface/apps/mobile/src: {}
+
+  ../../../interface/apps/web: {}
+
+  ../../../interface/config/eslint-config-custom: {}
+
+  ../../../interface/config/jest-presets: {}
+
+  ../../../interface/config/tsconfig: {}
+
+  ../../../interface/packages/ui: {}
+
+  ../../../interface/packages/utilities: {}
+
+  ../../../interface/packages/wallet: {}
+
+  ../../../react16-code: {}
+
+  ../../../recoil: {}
+
+  ../../../redux: {}
+
+  ../../../vue-router-ts: {}
+
+  ../../../webpack: {}
+
+  ../../../xb-react: {}
+
+  ../../../xb-react/packages/react: {}
+
+  ../../../xb-react/packages/react-demo: {}
+
+  ../../../xb-react/packages/react-reconciler: {}
+
+  ../../../xb-react/packages/shared: {}
+
+  ../react: {}
+
+  ../react-dom: {}
+
+  ../shared: {}

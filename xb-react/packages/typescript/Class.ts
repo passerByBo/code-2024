@@ -636,7 +636,3 @@ fn10({})
 fn10(fn10)
 fn10(window)
 fn10(1)
-
-type ABC = {
-	A: string
-}
