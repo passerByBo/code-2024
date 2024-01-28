@@ -41,7 +41,7 @@ function App() {
     </ul>
   );
 }
-
+ 
 function Child() {
   return <div>Hello React 18 Child</div>;
 }

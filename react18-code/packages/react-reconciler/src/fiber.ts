@@ -64,10 +64,12 @@ export class FiberNode {
 
     // 作为工作单元
     this.pendingProps = pendingProps;
+    // 确定之后的工作单元
     this.memoizedProps = null;
+    // 更新完的状态
     this.memoizedState = null;
     this.updateQueue = null;
-
+    // 衔接上一次的工作单元
     this.alternate = null;
     // 副作用
     this.flags = NoFlags;
@@ -77,8 +79,9 @@ export class FiberNode {
 }
 
 export class FiberRootNode {
+  // 容器  id = app
   container: Container;
-
+  // 工作中的
   current: FiberNode;
 
   finishedWork: FiberNode | null;
@@ -90,6 +93,7 @@ export class FiberRootNode {
   constructor(container: Container, hostRootFiber: FiberNode) {
     this.container = container;
     this.current = hostRootFiber;
+    // 衔接   链
     hostRootFiber.stateNode = this;
     this.pendingLanes = NoLanes;
     this.finishedLane = NoLane;
