@@ -11,6 +11,7 @@ const currentDispatcher: { current: Dispatcher | null } = {
 
 export const resolveDispatcher = (): Dispatcher => {
   const dispatcher = currentDispatcher.current;
+  // 为萨马？ TODO
   if (dispatcher === null) {
     throw new Error('hook只能在函数组件中执行');
   }
