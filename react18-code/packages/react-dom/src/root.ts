@@ -4,6 +4,7 @@ import { Container } from 'react-reconciler/src/hostConfig';
 import { initEvent } from './SyntheticEvent';
 
 export function createRoot(container: Container) {
+  // 创建FiberRootNode  关联HostRootFiber  current  stateNode
   const root = createContainer(container);
   return {
     render(element: ReactElementType) {

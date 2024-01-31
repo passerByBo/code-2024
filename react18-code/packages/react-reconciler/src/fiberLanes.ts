@@ -8,6 +8,7 @@ export const NoLane = 0b0000;
 export const NoLanes = 0b0000;
 
 export function mergeLanes(laneA: Lane, laneB: Lane): Lanes {
+  // 按位或   合并
   return laneA | laneB;
 }
 
@@ -16,6 +17,7 @@ export function requestUpdateLane() {
 }
 
 export function getHighestPriorityLane(lanes: Lanes): Lane {
+  // 取出最右边 最低位中的1
   return lanes & -lanes;
 }
 

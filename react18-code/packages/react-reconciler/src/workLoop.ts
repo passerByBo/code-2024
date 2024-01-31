@@ -135,6 +135,7 @@ function performSyncWorkOnRoot(root: FiberRootNode, lane: Lane) {
   if (__DEV__) {
     console.warn('render阶段开始');
   }
+  // 创建根FiberNode 赋值给workingProgress
   prepareFreshStack(root, lane);
   do {
     try {
@@ -160,13 +161,14 @@ function ensureRootIsScheduled(root: FiberRootNode) {
   if (updateLane === NoLane) {
     return;
   }
+  // updateLane = 1同步任务
   //react18 并行更新任务 startTransition
   if (updateLane === SyncLane) {
     // 同步优先级 用微任务调度
     if (__DEV__) {
       console.log('在微任务中调度，优先级：', updateLane);
     }
-    // [performSyncWorkOnRoot, performSyncWorkOnRoot, performSyncWorkOnRoot]
+    // [performSyncWorkOnRoot, performSyncWorkOnRoot, performSyncWorkOnRoot] TODO：什么场景下才会有多个
     scheduleSyncCallback(performSyncWorkOnRoot.bind(null, root, updateLane));
     scheduleMicroTask(flushSyncCallbacks);
   } else {
@@ -182,10 +184,14 @@ export function scheduleUpdateOnFiber(fiber: FiberNode, lane: Lane) {
   // workInProgress = fiber;
   // //根节点
   // const root = fiber.return as FiberNode;
+  // 根据传入的fiber获取root  这里的root为FiberRootNode
   const root = markUpdateFromFiberToRoot(fiber);
   //开始渲染
   console.log('🐱开始渲染');
   // renderRoot(root);
+  // 传入FiberRootNode 和lane 给root的pendingLanes合并
+  // 二进制数据取或
+  // FiberRootNode的pendingLanes设置为1
   markRootUpdated(root, lane);
   ensureRootIsScheduled(root);
 }
