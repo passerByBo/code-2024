@@ -148,6 +148,7 @@ export function createFiberRoot(
   formState: ReactFormState<any, any> | null,
 ): FiberRoot {
   // $FlowFixMe[invalid-constructor] Flow no longer supports calling new on functions
+  // 创建FiberRootNode实例
   const root: FiberRoot = (new FiberRootNode(
     containerInfo,
     tag,
@@ -166,12 +167,15 @@ export function createFiberRoot(
 
   // Cyclic construction. This cheats the type system right now because
   // stateNode is any.
+  // 创建hostRootFiber 绑定到FiberRootNode
   const uninitializedFiber = createHostRootFiber(
     tag,
     isStrictMode,
     concurrentUpdatesByDefaultOverride,
   );
+  // FiberRootNode通过current 连接根FiberNode
   root.current = uninitializedFiber;
+  // 根FiberNode通过stateNode绑定FiberRootNode
   uninitializedFiber.stateNode = root;
 
   if (enableCache) {

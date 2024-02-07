@@ -854,6 +854,7 @@ export function scheduleUpdateOnFiber(
       }
     }
 
+    // 开始调度
     ensureRootIsScheduled(root);
     if (
       lane === SyncLane &&

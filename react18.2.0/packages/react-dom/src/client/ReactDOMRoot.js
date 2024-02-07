@@ -163,18 +163,25 @@ export function createRoot(
   container: Element | Document | DocumentFragment,
   options?: CreateRootOptions,
 ): RootType {
+  // 判读啊你传入container 是否为dom
   if (!isValidContainer(container)) {
     throw new Error('createRoot(...): Target container is not a DOM element.');
   }
 
   warnIfReactDOMContainerInDEV(container);
 
+  // 严格模式
   let isStrictMode = false;
+  // concurrentMode 开关 // 是否允许并发更新
   let concurrentUpdatesByDefaultOverride = false;
+  // 标识符前缀
   let identifierPrefix = '';
+  // 错误处理函数
   let onRecoverableError = defaultOnRecoverableError;
+  // 过渡回调函数
   let transitionCallbacks = null;
 
+  // 配置和调用异常处理
   if (options !== null && options !== undefined) {
     if (__DEV__) {
       if ((options: any).hydrate) {
@@ -197,9 +204,11 @@ export function createRoot(
         }
       }
     }
+    // 赋值配置信息 严格模式
     if (options.unstable_strictMode === true) {
       isStrictMode = true;
     }
+    // 默认开启concurrentModel
     if (
       allowConcurrentByDefault &&
       options.unstable_concurrentUpdatesByDefault === true
@@ -216,7 +225,7 @@ export function createRoot(
       transitionCallbacks = options.unstable_transitionCallbacks;
     }
   }
-
+  // 创建 FiberRootNode  和 RootFiber
   const root = createContainer(
     container,
     ConcurrentRoot,
@@ -227,13 +236,22 @@ export function createRoot(
     onRecoverableError,
     transitionCallbacks,
   );
+  /**
+   * 标记 dom 对象，把 dom 和 RootFiber 对象关联起来
+   * 将 root.current 挂载到 container 的 _reactRootContainer 属性上
+   *  node[internalContainerInstanceKey] = hostRoot;
+   * const internalContainerInstanceKey = '__reactContainer$' + randomKey;
+   * const randomKey = Math.random().toString(36).slice(2);
+   */
   markContainerAsRoot(root.current, container);
+  // TODO
   Dispatcher.current = ReactDOMClientDispatcher;
 
   const rootContainerElement: Document | Element | DocumentFragment =
     container.nodeType === COMMENT_NODE
       ? (container.parentNode: any)
       : container;
+  // 监听所有支持的事件
   listenToAllSupportedEvents(rootContainerElement);
 
   // $FlowFixMe[invalid-constructor] Flow no longer supports calling new on functions

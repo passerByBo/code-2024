@@ -10,10 +10,15 @@
 /**
  * HTML nodeType values that represent the type of the node
  */
-
+// 元素节点：1
 export const ELEMENT_NODE = 1;
+// 文本节点：3
 export const TEXT_NODE = 3;
+// 注释节点：8
 export const COMMENT_NODE = 8;
+// 文档节点：9
 export const DOCUMENT_NODE = 9;
+// 文档类型节点：10
 export const DOCUMENT_TYPE_NODE = 10;
+// 文档片段节点：11
 export const DOCUMENT_FRAGMENT_NODE = 11;

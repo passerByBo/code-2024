@@ -114,7 +114,7 @@ function renderSubtreeIntoContainer(
     callback,
   );
 }
-
+// 入口 createRoot 创建根
 function createRoot(
   container: Element | Document | DocumentFragment,
   options?: CreateRootOptions,

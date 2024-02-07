@@ -242,6 +242,7 @@ function findHostInstanceWithWarning(
   return findHostInstance(component);
 }
 
+// 创建根
 export function createContainer(
   containerInfo: Container,
   tag: RootTag,
@@ -254,6 +255,7 @@ export function createContainer(
 ): OpaqueRoot {
   const hydrate = false;
   const initialChildren = null;
+  // 创建FiberRootNode并返回
   return createFiberRoot(
     containerInfo,
     tag,
@@ -379,6 +381,7 @@ export function updateContainer(
 
   const root = enqueueUpdate(current, update, lane);
   if (root !== null) {
+    // 开始调度
     scheduleUpdateOnFiber(root, current, lane);
     entangleTransitions(root, current, lane);
   }
