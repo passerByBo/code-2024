@@ -50,6 +50,7 @@ export function insertChildToContainer(child: Instance, container: Container, be
   container.insertBefore(child, before);
 }
 
+// 使用自身调度 
 export const scheduleMicroTask =
   typeof queueMicrotask === 'function'
     ? queueMicrotask

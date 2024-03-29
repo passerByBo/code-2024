@@ -41,6 +41,7 @@ function completeUnitOfWork(fiber: FiberNode) {
   } while (node !== null);
 }
 
+// 这里少了原来的分片机制   直接一口气执行完成
 function performUnitOfWork(fiber: FiberNode) {
   //child
   const next = beginWork(fiber, wipRootRenderLane);
@@ -168,8 +169,10 @@ function ensureRootIsScheduled(root: FiberRootNode) {
     if (__DEV__) {
       console.log('在微任务中调度，优先级：', updateLane);
     }
-    // [performSyncWorkOnRoot, performSyncWorkOnRoot, performSyncWorkOnRoot] TODO：什么场景下才会有多个
+    // [performSyncWorkOnRoot, performSyncWorkOnRoot, performSyncWorkOnRoot]
+    // scheduleSyncCallback 添加函数执行
     scheduleSyncCallback(performSyncWorkOnRoot.bind(null, root, updateLane));
+    // 通过微任务  宏任务等方式执行函数
     scheduleMicroTask(flushSyncCallbacks);
   } else {
     // 其他优先级 用宏任务调度
