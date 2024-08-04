@@ -113,7 +113,7 @@ const showList: ShowList = xs =>
 // 乘法对应的是元祖和多个属性组合成对象
 // 加法通常表达为联合类型和枚举
 
-// 如下从Option Either List中取值 并且  将特殊类型根据转换函数生成对应的值
+// 如下从Option Either List中取值 并且  将特殊类型根据转换函数生成对应的值 ts-patter
 
 // Option
 type MatchOption = <A, B>(onNone: () => B, onSome: (a: A) => B) => (x: Option<A>) => B;
@@ -201,14 +201,20 @@ const resultList = matchList(
 
 // ----------------------------------- Magma semigroup monoid ---------------------------------------------
 
+// Magma基础的结构集合+concat二元运算 => 增加结合律+和*满足 -和除不满足 semigroup => 增加empty 恒等一个数和empty结合肯定返回相同的值 monoid => 逆变操作和empty相反 group
+// 结构 structor 一组值以及对他们的操作
+// 组合值的方式
+
 // Magma
 // Set<M>  二元计算函数从该集合中接收两个值并将其映射到该集合中的另一个值
+// concat在集合上是封闭的
+// 一个集合 + concat函数 从集合中取两个值转换为集合中的另外一个值  那么久称为Magma
 
 // interface Magma<M> {
 //     concat: (x: M, y: M) => M
 // }
 
-// (3+4)+5 = 3 + (4 + 5) 判断是否具有结合性来判断是否为Magma
+// (3+4)+5 = 3 + (4 + 5) 判断是否具有结合性来判断是否为Magma（主要判断是否具有关联性 运算舒服和结合律）
 
 // 结合顺序无关，可以随时去掉分组的括号
 
@@ -305,6 +311,14 @@ const concatAll2 =
 //     empty: A,// 空的标示值
 //     inverse: (a: A) => A// 逆运算的方法
 // }
+
+// 三角形的组合变形关系就是一个组合group
+
+// 一组数据的集合
+// 封闭的二元运算
+// 运算顺序无关
+// 恒等元素 identity 充当中性的元素
+// 逆变
 
 //逆操作就是concat后  调用逆操作可能会回到到原来的自己
 interface Group<A> extends Monoid<A> {
@@ -500,6 +514,7 @@ const boolShow: Show<boolean> = { toString: a => (a ? 'Yes' : 'No') };
 
 // interface 侧重于对象  type侧重于类型别名
 
+//语法不支持
 // typeclass Functor < F > {
 //     map: (f: A=>B) => F<A> => F<B>
 // }
@@ -597,3 +612,41 @@ function lift<F>(F: Functor<F>): <A, B>(f: (x: A) => B) => (fa: HKT<F, A>) => HK
 const liftIncrement = lift(optionFunctor)(increment);
 const liftIncrement2 = lift(eitherFunctor)(increment);
 const liftIncrement3 = lift(ListFunctor)(increment);
+
+// --------------------------Functor Composition---------------------------
+// 涵子组合  TaskEither
+
+// import { List, cons, nil, isNil, functor as ListFunctor } from './lib/List';
+// import { Option, some, none, isNone, functor as optionFunctor } from './lib/Option';
+
+type Double = (x: number) => number;
+const double: Double = x => x * 2;
+
+const data1: Option<number> = some(12);
+const output1 = optionFunctor.map(double)(data1);
+
+console.log(output1);
+
+type ComposeR = <A, B, C>(f: (a: A) => B, g: (b: B) => C) => (a: A) => C;
+const composeR: ComposeR = (f, g) => a => g(f(a));
+
+const data2: Option<List<number>> = some(cons(1, cons(2, cons(3, nil))));
+const mapO = optionFunctor.map;
+const mapL = ListFunctor.map;
+
+// const output2 = mapO((xs: List<number>) => mapL(double)(xs))(data2)
+// const output2 = mapO(mapL(double))(data2);
+const output2 = composeR(mapL, mapO)(double)(data2);
+
+declare module 'fp-ts/HKT' {
+  interface URItoKind<A> {
+    OptionList: Option<List<A>>;
+  }
+}
+
+const optionListFunctor: Functor1<'OptionList'> = {
+  map: composeR(mapL, mapO),
+};
+
+const output3 = optionListFunctor.map(double)(data2);
+console.log(JSON.stringify(output3, null, 2));

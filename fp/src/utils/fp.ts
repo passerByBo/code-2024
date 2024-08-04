@@ -47,6 +47,8 @@ const myFlow =
 // (s1:string, s2:string) -> boolean
 
 // ----------------------------Option-----------------------------
+// map flatten match|fold    map+flatten=chain    getOreElse= match(() =>(),identory)
+// fromPredicate boolean
 // Functor的功能，并且包含从函子中取值的功能函数 容器要么有值要么没有值
 
 // type Option<A> = Some<A> | None
@@ -69,8 +71,8 @@ const getUiMessageWithInverse = (x: number): string =>
     // 判断返回的是什么并执行对应的函数 返回string
     O.match(
       () => `Cannot get the inverse of ${x}`,
-      (ix) => `The inverse of ${x} is ${ix}`
-    )
+      ix => `The inverse of ${x} is ${ix}`,
+    ),
   );
 
 getUiMessageWithInverse(0); // Cannot get the inverse of 0
@@ -80,7 +82,7 @@ const safeInverse = (x: number) =>
   pipe(
     x,
     inverse,
-    O.match(() => 0, identity) // number
+    O.match(() => 0, identity), // number
   );
 
 safeInverse(0);
@@ -91,7 +93,7 @@ const safeInverse2 = (x: number) =>
   pipe(
     x,
     inverse, // Option<number>
-    O.getOrElse(() => 0) // number
+    O.getOrElse(() => 0), // number
   );
 
 safeInverse2(0);
@@ -103,7 +105,7 @@ const safeInverse3 = (x: number) =>
     inverse, // Option<number>
     // 如果想返回不同类型的值，如果Option<number> 异常场景想取出不同类型的值，可以使用getOrElseW
     // match也是同样的道理 Match<string | number>  matchW()
-    O.getOrElseW(() => 'invalid') // number
+    O.getOrElseW(() => 'invalid'), // number
   );
 
 type Nullable<A> = A | null | undefined;
@@ -130,7 +132,7 @@ const inverseHead = (ns: ReadonlyArray<number>) =>
   pipe(
     ns,
     head,
-    O.map(inverse) // 形成嵌套
+    O.map(inverse), // 形成嵌套
   );
 
 // 如果上一个函数已经返回O.some(1)或者O.none 继续传递给返回Option类型的函数  会形成O.some(O.none)嵌套的场景
@@ -141,7 +143,7 @@ const inverseHead2 = (ns: ReadonlyArray<number>) =>
   pipe(
     ns,
     head,
-    O.chain(inverse) // 形成嵌套
+    O.chain(inverse), // 形成嵌套并解开
   );
 
 // 谓词  函数接受一个或者多个参数 并返回bool  是否满足条件  常用的filter find都接受一个谓词函数
@@ -164,7 +166,7 @@ const getDiscountText = (discount: Discount) =>
   pipe(
     discount, // {percentage: number,expired: boolean}
     O.fromPredicate(isDiscountValid), // O.some(Discount) | O.none
-    O.map(({ percentage }) => `${percentage} % DISCOUNT`) // O.some(string)
+    O.map(({ percentage }) => `${percentage} % DISCOUNT`), // O.some(string)
   );
 
 // Option中的  错误处理
@@ -180,19 +182,19 @@ const movie1: Movie = {
   title: 'The Kingdom of Monads',
   releaseYear: 2023,
   ratingPosition: 1,
-  award: 'Oscar'
+  award: 'Oscar',
 };
 
 const movie2: Movie = {
   title: 'natueal Transformations',
   releaseYear: 2023,
-  ratingPosition: 3
+  ratingPosition: 3,
 };
 
 const movie3: Movie = {
   title: 'Fun with for loops',
   releaseYear: 2023,
-  ratingPosition: 74
+  ratingPosition: 74,
 };
 
 const getMovieHighlight = (movie: Movie): string =>
@@ -203,32 +205,32 @@ const getMovieHighlight = (movie: Movie): string =>
     // 这里就需要使用到O.alt(f) alternative computation
     O.alt(() => getMovieTop10Highlight(movie)), // Option<string>
     // else 对Option进行了取值
-    O.getOrElse(() => `Released in ${movie.releaseYear}`)
+    O.getOrElse(() => `Released in ${movie.releaseYear}`),
   );
 
 const getMovieAwardHighlight = (movie: Movie): O.Option<string> =>
   pipe(
     movie.award, // string | undefined
     O.fromNullable, // O.some(number) | O.none
-    O.map((award) => `Awarded with ${award}`) // Option<string>
+    O.map(award => `Awarded with ${award}`), // Option<string>
   );
 
 const getMovieTop10Highlight = (movie: Movie): O.Option<string> =>
   pipe(
     movie,
     O.fromPredicate(({ ratingPosition }) => ratingPosition <= 10), // Option<Movie>
-    O.map(({ ratingPosition }) => `In Top 10 at position: ${ratingPosition}`) // Option<string>
+    O.map(({ ratingPosition }) => `In Top 10 at position: ${ratingPosition}`), // Option<string>
   );
 
 // f的返回值为number | string
 const f = (a: O.Option<number>) =>
   pipe(
     a,
-    O.altW(() => O.some('invalid'))
+    O.altW(() => O.some('invalid')),
   );
 
 // ------------------------------------Either--------------------------------------
-
+// tryCatch  tryCatchK map+mapLeft=bimap
 // 错误捕获处理
 
 // 如上知道了错误的结果 但是不知道错误的过程
@@ -267,16 +269,16 @@ const pay =
     account.frozen
       ? E.left({
           type: 'AccountFrozen',
-          message: 'Cannot pay with frozen account'
+          message: 'Cannot pay with frozen account',
         })
       : account.balance < amount
         ? E.left({
             type: 'NotEnoughBalance',
-            message: `Cannot pay ${amount} a banlance of ${account.balance}`
+            message: `Cannot pay ${amount} a banlance of ${account.balance}`,
           })
         : E.right({
             ...account,
-            balance: account.balance - amount
+            balance: account.balance - amount,
           });
 
 const checkouyt = (cart: Cart) => (account: Account) =>
@@ -284,9 +286,9 @@ const checkouyt = (cart: Cart) => (account: Account) =>
     account,
     pay(cart.total), // 返回值为Either的left或者right
     E.match(
-      (e) => 'handle error', // 所有的错误都走的这里，如果想要做错误的单独分开处理 可以使用ts-adt的库
-      (a) => 'handle success ...'
-    )
+      e => 'handle error', // 所有的错误都走的这里，如果想要做错误的单独分开处理 可以使用ts-adt的库
+      a => 'handle success ...',
+    ),
   );
 // E.left<AccountFrozen>
 // E.left<NotEnoughBalance>
@@ -302,11 +304,11 @@ const checkouyt2 = (cart: Cart) => (account: Account) =>
     E.match(
       // 所有的错误都走的这里，如果想要做错误的单独分开处理 可以使用ts-adt的库
       matchError({
-        AccountFrozen: (e) => 'account frozen',
-        NotEnoughBalance: () => 'not enough banance'
+        AccountFrozen: e => 'account frozen',
+        NotEnoughBalance: () => 'not enough banance',
       }),
-      (a) => 'handle success ...'
-    )
+      a => 'handle success ...',
+    ),
   );
 
 // 很多同步函数都会抛出异常  但是在函数式风格很难 因为不应该抛出异常
@@ -328,7 +330,7 @@ const jsonParse = (text: string): E.Either<Error, unknown> =>
   E.tryCatch(
     () => JSON.parse(text),
     // (e) => e instanceof Error ? e : new Error(String(e)) // 提供未知对象转换为错误的方法
-    E.toError
+    E.toError,
   );
 
 // 如上我们将函数单独包裹一层 Either.tryCatchK 可以实现不需要手动包裹函数
@@ -345,8 +347,8 @@ const jsonParse3 = E.tryCatchK(
   JSON.parse,
   (e): JsonParseError => ({
     type: 'JsonParseError',
-    error: E.toError(e)
-  })
+    error: E.toError(e),
+  }),
 );
 
 type Response = Readonly<{
@@ -364,14 +366,14 @@ const createResponse = (payload: unknown): E.Either<JsonStringifyError, Response
   pipe(
     payload,
     J.stringify, // Either<unknown, string>
-    E.map((s) => ({
+    E.map(s => ({
       body: s,
-      contentLength: s.length
+      contentLength: s.length,
     })), // Either<unknown, Response>
-    E.mapLeft((e) => ({
+    E.mapLeft(e => ({
       type: 'JsonStringifyError',
-      error: E.toError(e)
-    }))
+      error: E.toError(e),
+    })),
   );
 
 // E.bimap(f, g) 一个用于映射左值 另外一个用于映射右值
@@ -380,15 +382,15 @@ const createResponse2 = (payload: unknown): E.Either<JsonStringifyError, Respons
     payload,
     J.stringify, // Either<unknown, string>
     E.bimap(
-      (e) => ({
+      e => ({
         type: 'JsonStringifyError',
-        error: E.toError(e)
+        error: E.toError(e),
       }),
-      (s) => ({
+      s => ({
         body: s,
-        contentLength: s.length
-      })
-    )
+        contentLength: s.length,
+      }),
+    ),
   );
 
 // JSON.stringify需要每次都映射错误比较麻烦 使用函数组合的方式来重写
@@ -397,19 +399,19 @@ const jsonStrify = flow(
   E.mapLeft(
     (e): JsonStringifyError => ({
       type: 'JsonStringifyError',
-      error: E.toError(e)
-    })
-  )
+      error: E.toError(e),
+    }),
+  ),
 );
 
 const createResponse3 = (payload: unknown): E.Either<JsonStringifyError, Response> =>
   pipe(
     payload,
     jsonStrify,
-    E.map((s) => ({
+    E.map(s => ({
       body: s,
-      contentLength: s.length
-    }))
+      contentLength: s.length,
+    })),
   );
 createResponse({ balance: 100, success: true });
 
@@ -434,15 +436,15 @@ const decodeUser = (encodedUser: string) =>
     // E.flatten,// 这里会自动将两个左值进行合并赋值 但是又不存在extends关系所以会报错，所以需要使用flattenW 扩展错误
     // E.flattenW,// Either<Base64DecodeError | JsonParseError, unknown>
     // 使用flatMapW替换map和flattenW
-    E.flatMap(jsonParse3)
+    E.flatMap(jsonParse3),
   );
 
 const base64Decode = E.tryCatchK(
   base64.decode,
   (e): Base64DecodeError => ({
     type: 'Base64DecodeError',
-    error: E.toError(e)
-  })
+    error: E.toError(e),
+  }),
 );
 
 // declare const decodeUserObjectFromUnkown:(u: unknown) => E.Either<InvalidUserObject, User>
@@ -467,7 +469,8 @@ class PhoneNumberValidator {
 
   constructor() {
     // 正则表达式匹配常见的电话号码格式，包括国际格式和本地格式
-    this.phoneNumberRegex = /^(?:(?:\+|00)([1-9]\d{0,2}))?[\s-]?\(?(?:0?[1-9]\d{1,4}\)?[\s-]?)?\d{3,4}[\s-]?\d{3,4}$/;
+    this.phoneNumberRegex =
+      /^(?:(?:\+|00)([1-9]\d{0,2}))?[\s-]?\(?(?:0?[1-9]\d{1,4}\)?[\s-]?)?\d{3,4}[\s-]?\d{3,4}$/;
   }
 
   // 测试给定的字符串是否符合电话号码格式
@@ -485,14 +488,14 @@ const validateEmail = flow(
     (invalidEmail): MalformedEmail | NotAnEmail =>
       invalidEmail.includes('@')
         ? { type: 'MalformedEmail', error: new Error('MalformedEmail email!') }
-        : { type: 'NotAnEmail', error: new Error('not an email!') }
+        : { type: 'NotAnEmail', error: new Error('not an email!') },
   ),
   E.map(
     (email): Email => ({
       type: 'Email',
-      value: email
-    })
-  )
+      value: email,
+    }),
+  ),
 );
 
 const valitePhoneNumber = flow(
@@ -500,15 +503,15 @@ const valitePhoneNumber = flow(
     (maybePhoneNumber: string) => phoneNumberRegex.test(maybePhoneNumber),
     (): InvalidPhoneNumber => ({
       type: 'InvalidPhoneNumber',
-      error: new Error('Invalid Phone Number')
-    })
+      error: new Error('Invalid Phone Number'),
+    }),
   ),
   E.map(
     (phoneNumber): PhoneNumber => ({
       type: 'PhoneNumber',
-      value: phoneNumber
-    })
-  )
+      value: phoneNumber,
+    }),
+  ),
 );
 
 // E.orElse(onLeft) 只有当传入的是Left才会执行内部的函数
@@ -530,8 +533,8 @@ const validateLoginName = (loginName: string) =>
     // if Left<'NotAnEmail'> -> validatePhoneNumber
     E.orElseW(
       (e): E.Either<InvalidPhoneNumber | MalformedEmail, PhoneNumber> =>
-        e.type === 'NotAnEmail' ? valitePhoneNumber(loginName) : E.left(e)
-    ) // Either<'MalformedEmail' | 'InvalidPhoneNumber', Email | PhoneNumber>
+        e.type === 'NotAnEmail' ? valitePhoneNumber(loginName) : E.left(e),
+    ), // Either<'MalformedEmail' | 'InvalidPhoneNumber', Email | PhoneNumber>
   );
 
 // 响应结果优化
