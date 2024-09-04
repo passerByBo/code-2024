@@ -1,0 +1,50 @@
+Arguments: 
+  D:\software\node-v14.17.1\node.exe D:\software\node-v14.17.1\node_modules\yarn\bin\yarn.js add estree
+
+PATH: 
+  D:\software\Python311\Scripts\;D:\software\Python311\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\TortoiseSVN\bin;D:\software\ffmpeg-master-latest-win64-lgpl-shared\bin;D:\wok\webp\libwebp-0.4.1-rc1-windows-x64-no-wic\bin;D:\platform-tools;;D:\software\nvm;C:\Program Files\nodejs;D:\javadev\jdk1.8.0_172\bin;;D:\software\微信web开发者工具\dll;C:\Users\xbshi5\.cargo\bin;C:\Users\xbshi5\AppData\Local\Microsoft\WindowsApps;D:\software\vscode\Microsoft VS Code\bin;D:\software\nvm;C:\Program Files\nodejs;D:\software\node-v14.17.1;;C:\Windows\System32\Wbem;D:\software\IntelliJ IDEA Community Edition 2023.3.4\bin;
+
+Yarn version: 
+  1.22.19
+
+Node version: 
+  14.17.1
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: write EPROTO 11440:error:14094419:SSL routines:ssl3_read_bytes:tlsv1 alert access denied:c:\ws\deps\openssl\openssl\ssl\record\rec_layer_s3.c:1544:SSL alert number 49
+  
+      at WriteWrap.onWriteComplete [as oncomplete] (internal/stream_base_commons.js:94:16)
+
+npm manifest: 
+  {
+    "name": "custom-ioc",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.ts",
+    "type": "module",
+    "scripts": {
+      "start": "ts-node-dev --respawn --transpile-only index.ts",
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+      "esprima": "^4.0.1"
+    },
+    "devDependencies": {
+      "@babel/parser": "^7.25.6",
+      "@types/esprima": "^4.0.6",
+      "ts-node-dev": "^2.0.0",
+      "typescript": "^5.5.4"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
