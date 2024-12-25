@@ -54,6 +54,7 @@ function hasKey<O extends Object>(obj: O, key: PropertyKey): key is keyof O {
 }
 
 function controller<T extends { new (...arg: any[]): {} }>(constructor: T) {
+  console.log(1);
   return class extends constructor {
     public indexService: IIndexService;
 
@@ -70,6 +71,7 @@ function controller<T extends { new (...arg: any[]): {} }>(constructor: T) {
 }
 
 function inject(serviceIdentifier: symbol) {
+  console.log(2);
   return function (target: any, targetKey: string | undefined, index: number) {
     console.log("===", target, targetKey);
     if (!targetKey) {
@@ -87,6 +89,7 @@ class IndexController {
   public indexService: IIndexService;
 
   constructor(@inject(TYPES.indexService) indexService?: IIndexService) {
+    console.log(3);
     if (indexService) {
       this.indexService = indexService;
     }
